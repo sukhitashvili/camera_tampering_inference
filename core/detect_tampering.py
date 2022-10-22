@@ -1,3 +1,5 @@
+from typing import Union
+
 import cv2
 import numpy as np
 import torch
@@ -9,7 +11,8 @@ from utils.model_utils import resnet18_model_creator, resnet_transform
 class TamperingDetector:
     def __init__(self,
                  run_every_nth: int = 1,
-                 key_frame_path: str = ''):
+                 key_frame_path: Union[str] = None,
+                 threshold: float = 0.4):
         """
         Args:
             run_every_nth: Variable to control at which N-th frame to run deep model.
@@ -17,17 +20,20 @@ class TamperingDetector:
                            run_every_nth>1 means algorithm will wait N-th frame and return previous prediction
                            until new frame is passed in.
             key_frame_path: Key frame path which will be used for comparison internally.
+            threshold: Threshold value
         """
         # self.device = 'cpu'
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
         self.model = resnet18_model_creator().to(self.device)
         self.transform = resnet_transform()
         self.cos_sim = torch.nn.CosineSimilarity(dim=1, eps=1e-08)
-        self.threshold = 0.4  # tampering is positive label (should be one)
+        self.threshold = threshold  # tampering is positive label (should be one)
         self.run_every_nth = int(run_every_nth)
         self.prev_prediction = False  # no tampering was happened before model predicts it
         self.frame_counter = 0
-        self.key_frame_embedding = self.get_embedding(cv2.imread(key_frame_path))
+        self.key_frame_embedding = None
+        if key_frame_path:
+            self.key_frame_embedding = self.get_embedding(cv2.imread(key_frame_path))
 
     def get_embedding(self, frame: np.ndarray) -> torch.Tensor:
         """
@@ -119,3 +125,16 @@ class TamperingDetector:
         print('cos_dist:', cos_dist, '  <>   ', 'self.threshold:', self.threshold)
         prediction = cos_dist >= self.threshold  # tampering is positive label (should be one)
         return prediction
+
+    @torch.no_grad()
+    def set_key_frame_embedding(self, key_frame_path: str):
+        """
+        Sets key frame embedding.
+
+        Args:
+            key_frame_path: Key frame path which will be used for comparison internally.
+
+        Returns:
+            None
+        """
+        self.key_frame_embedding = self.get_embedding(cv2.imread(key_frame_path))
