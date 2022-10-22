@@ -1,11 +1,22 @@
+request_link: https://webhook.site/4f54c89d-a839-495e-aa06-fda6e40f5cb7
+
+logger_path: ''
+
 folders_to_watch:
-  - folder1
+  - FULL_PATH_TO_CAMERA1_FOLDER
+  - FULL_PATH_TO_CAMERA2_FOLDER
 
 folder_with_valid_images:
-  - folder1
+  - FULL_PATH_TO_CAMERA1_FOLDER
+  - FULL_PATH_TO_CAMERA2_FOLDER
 
 thresholds_per_camera:
   default: 0.4
-  folder1: 0.4
+  CAMERA1_FOLDER_NAME: 0.5
+  CAMERA2_FOLDER_NAME: 0.6
+
+image_formats:
+  - png
+  - jpg
 
 
