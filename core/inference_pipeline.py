@@ -82,7 +82,6 @@ class InferencePipeline:
             if image_path is None:
                 continue
             self.setup_model(folder_path=folder_path)
-            image_path = self.get_image_path(folder_path=folder_path)
             image = cv2.imread(image_path)
             prediction = self.tamp_det.inference(frame=image)
             self.logger.info(f'{folder_path}   :::: result: {prediction}')
