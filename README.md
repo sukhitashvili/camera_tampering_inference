@@ -33,7 +33,7 @@ So the tampering detection pipeline will be running by Cron job processes.
 Ubuntu has preinstalled Cron program but if you machines does not have you should install it, it's free.
 To install cron jobs with predefinied processing time in minutes use `bash` script of the repo.
 
-To install cron job run:
+To install and start cron job run:
 ```bash
 bash install.sh INTERVAL_IN_MINUTES
 ```
