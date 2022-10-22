@@ -29,28 +29,35 @@ class InferencePipeline:
 
     def setup_model(self, folder_path: str):
         """
-        Resets model's threshold and key frame values per input folder based on folder/camera name
+        Resets model's threshold and key frame values per each input folder based on folder/camera name/id.
         Args:
-            folder_path: Relative or full path to the folder
+            folder_path: Full path to the folder
 
         Returns: None
         """
         valid_folder_path = self.get_valid_folder_path(folder_path=folder_path)
+        if valid_folder_path is None:
+            return False
         camera_name = os.path.basename(valid_folder_path)
         key_frame_path = self.get_image_path(folder_path=valid_folder_path)
+        if key_frame_path is None:
+            self.logger.info(f'Valid image does not exist at: {valid_folder_path}')
+            return False
         if camera_name in self.thresholds_per_camera:
             thresh_value = float(self.thresholds_per_camera[camera_name])
             self.tamp_det.threshold = thresh_value
         self.tamp_det.set_key_frame_embedding(key_frame_path=key_frame_path)
+        return True
 
-    def get_valid_folder_path(self, folder_path: str) -> str:
+    def get_valid_folder_path(self, folder_path: str) -> Optional[str]:
         input_camera_name = os.path.basename(folder_path)
         for valid_folder_path in self.folders_with_valid_images:
             camera_name = os.path.basename(valid_folder_path)
             if camera_name == input_camera_name:
                 return valid_folder_path
 
-        raise ValueError('Input folder name and valid folder name does not match')
+        self.logger.info(f'Valid image does not exist for camera folder: {folder_path}')
+        return None
 
     def get_files(self, folder_path: str) -> List[str]:
         files = []
@@ -81,7 +88,9 @@ class InferencePipeline:
             image_path = self.get_image_path(folder_path=folder_path)
             if image_path is None:
                 continue
-            self.setup_model(folder_path=folder_path)
+            setup_success = self.setup_model(folder_path=folder_path)
+            if not setup_success:
+                continue
             image = cv2.imread(image_path)
             prediction = self.tamp_det.inference(frame=image)
             self.logger.info(f'{folder_path}   :::: result: {prediction}')
