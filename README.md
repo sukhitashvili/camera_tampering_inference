@@ -19,7 +19,7 @@ Inside config file please provide following required information:
 - `request_link` - Is link where post request will be sent if tampering detected;
 - `logger_path` - Is logger file location used for testing/monitoring. Better if you create it at more accessible location;
 - `folders_to_watch` - Contains listed full paths to folders which should be monitored. Folder name should be camera id. You can extract full path of a file or folder in
-linux with `CRTL+c` and `CRTL+v` commands (like copy pasting a file);
+linux with `CRTL+c` and `CRTL+v` commands (like copy & pasting a file);
 - `folder_with_valid_images` - Contains listed full paths to folders with valid images per camera. 
 Camera folder name should match with camera id being monitored.
 - `thresholds_per_camera` - Contains default value for threshold. To change threshold values per camera you should 
