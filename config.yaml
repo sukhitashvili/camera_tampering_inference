@@ -1,6 +1,6 @@
 request_link: https://webhook.site/4f54c89d-a839-495e-aa06-fda6e40f5cb7
 
-logger_path: /home/logger.txt
+logger_path: /home/soso/Desktop/personal/personal_business/camera_tampering_inference/logger.txt
 
 folders_to_watch:
   - FULL_PATH_TO_CAMERA1_FOLDER
