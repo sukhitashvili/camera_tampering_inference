@@ -1,9 +1,9 @@
+import json
 import os
 from glob import glob
-from typing import List
+from typing import List, Optional
 import logging
 
-import json
 import cv2
 import requests
 from omegaconf import DictConfig
@@ -58,12 +58,15 @@ class InferencePipeline:
             file_path = os.path.join(folder_path, '*' + img_format)
             files_path = glob(file_path)
             files += files_path
-
+        files.sort(key=os.path.getctime)  # sort file by creation time
         return files
 
-    def get_image_path(self, folder_path: str) -> str:
+    def get_image_path(self, folder_path: str) -> Optional[str]:
         image_pathes = self.get_files(folder_path=folder_path)
-        image_path = image_pathes[0]
+        if len(image_pathes) == 0:
+            self.logger.info(f'No images in folder: {folder_path}')
+            return None
+        image_path = image_pathes[-1]  # take the last file from sorted list by creation date
         return image_path
 
     def run(self):
@@ -75,6 +78,9 @@ class InferencePipeline:
         """
         for folder_path in self.folders_to_check:
             self.logger.info(f'Checking folder: {folder_path}')
+            image_path = self.get_image_path(folder_path=folder_path)
+            if image_path is None:
+                continue
             self.setup_model(folder_path=folder_path)
             image_path = self.get_image_path(folder_path=folder_path)
             image = cv2.imread(image_path)
