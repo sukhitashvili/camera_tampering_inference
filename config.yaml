@@ -7,8 +7,8 @@ folders_to_watch:
   - FULL_PATH_TO_CAMERA2_FOLDER
 
 folder_with_valid_images:
-  - FULL_PATH_TO_CAMERA1_FOLDER
-  - FULL_PATH_TO_CAMERA2_FOLDER
+  - FULL_PATH_TO_VALID_IMAGE_CAMERA1_FOLDER
+  - FULL_PATH_TO_VALID_IMAGE_CAMERA2_FOLDER
 
 thresholds_per_camera:
   default: 0.4
