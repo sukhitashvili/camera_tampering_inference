@@ -1,0 +1,7 @@
+opencv-contrib-python==4.4.0.46
+pillow==9.2.0
+hydra-core==1.1.0
+tqdm
+torch~=1.12.1+cu116
+torchvision~=0.13.1+cu116
+numpy~=1.21.6

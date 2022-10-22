@@ -1,0 +1,11 @@
+folders_to_watch:
+  - folder1
+
+folder_with_valid_images:
+  - folder1
+
+thresholds_per_camera:
+  default: 0.4
+  folder1: 0.4
+
+
