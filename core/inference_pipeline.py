@@ -9,6 +9,7 @@ import requests
 from omegaconf import DictConfig
 
 from core.detect_tampering import TamperingDetector
+from utils.utils import process_images
 
 
 class InferencePipeline:
@@ -26,6 +27,7 @@ class InferencePipeline:
         self.tamp_det = TamperingDetector(run_every_nth=1,
                                           key_frame_path=None,
                                           threshold=self.thresholds_per_camera['default'])
+        self.catch_params = config['catch_params']
 
     def setup_model(self, folder_path: str):
         """
@@ -101,4 +103,11 @@ class InferencePipeline:
                                   headers={'Content-Type': 'application/json'})
                 self.logger.info(f'{folder_path}   :::: result status_code: {r.status_code}')
                 self.logger.info(f'{folder_path}   :::: result text: {r.text}')
+                # save image in catch folder
+                if self.catch_params['catch_folder_name']:
+                    process_images(file_path=image_path,
+                                   folder_name_to_keep_tampered_imgs=self.catch_params['catch_folder_name'],
+                                   keeping_time_in_seconds=self.catch_params['catching_time_in_seconds']
+                                   )
+
             os.remove(image_path)
