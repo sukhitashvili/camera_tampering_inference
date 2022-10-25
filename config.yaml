@@ -15,6 +15,10 @@ thresholds_per_camera:
   CAMERA1_FOLDER_NAME: 0.5
   CAMERA2_FOLDER_NAME: 0.6
 
+catch_params:
+  catching_time_in_seconds: 30
+  catch_folder_name: 'catch_tampered_imgs'  # To stop catching provide empty string as argument: ''
+
 image_formats:
   - png
   - jpg
